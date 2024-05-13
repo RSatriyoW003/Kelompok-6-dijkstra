@@ -1,6 +1,5 @@
 from itertools import permutations
 
-
 class WeightedGraph:
     #initialization
     def __init__(self):
@@ -97,4 +96,64 @@ def tambahkanJalan(self, kota1, kota2, jarak):
         # Initialize variables
         shortest_distance = float('inf')
         shortest_path = []
+# Generate all permutations of cities
+        cities = list(self.cityList.keys())
+        for path in permutations(cities):
+            # Calculate total distance for current permutation
+            total_distance = 0
+            for i in range(len(path) - 1):
+                if path[i] in self.cityList and path[i + 1] in self.cityList[path[i]]:
+                    total_distance += self.cityList[path[i]][path[i + 1]]
+                else:
+                    total_distance = float('inf')
+                    break  # Break if path is invalid
+            # Check if current permutation is shorter than the current shortest path
+            if total_distance < shortest_distance:
+                shortest_distance = total_distance
+                shortest_path = path
+
+        return shortest_path, shortest_distance
+
+# Example usage with Dijkstra's algorithm:
+petaIndonesia = WeightedGraph()
+petaIndonesia.tambahkanKota("Jakarta")
+petaIndonesia.tambahkanKota("Surabaya")
+petaIndonesia.tambahkanKota("Bandung")
+petaIndonesia.tambahkanKota("Medan")
+petaIndonesia.tambahkanKota("Makassar")
+petaIndonesia.tambahkanKota("Semarang")
+petaIndonesia.tambahkanKota("Yogyakarta")
+petaIndonesia.tambahkanKota("Palembang")
+petaIndonesia.tambahkanKota("Denpasar")
+petaIndonesia.tambahkanKota("Malang")
+
+petaIndonesia.tambahkanJalan("Jakarta", "Surabaya", 784)
+petaIndonesia.tambahkanJalan("Jakarta", "Bandung", 150)
+petaIndonesia.tambahkanJalan("Jakarta", "Medan", 1678)
+petaIndonesia.tambahkanJalan("Surabaya", "Bandung", 803)
+petaIndonesia.tambahkanJalan("Bandung", "Medan", 1371)
+petaIndonesia.tambahkanJalan("Medan", "Makassar", 2462)
+petaIndonesia.tambahkanJalan("Makassar", "Semarang", 1228)
+petaIndonesia.tambahkanJalan("Semarang", "Yogyakarta", 129)
+petaIndonesia.tambahkanJalan("Yogyakarta", "Palembang", 565)
+petaIndonesia.tambahkanJalan("Palembang", "Denpasar", 1584)
+petaIndonesia.tambahkanJalan("Denpasar", "Malang", 723)
+petaIndonesia.tambahkanJalan("Malang", "Jakarta", 847)
+
+petaIndonesia.printGraph()
+shortest_distances = petaIndonesia.dijkstra("Jakarta")
+# Hitung jarak terpendek dari Jakarta ke setiap kota
+shortest_distances = petaIndonesia.dijkstra("Jakarta")
+
+# Cetak jarak dari Jakarta ke setiap kota
+print("Jarak dari Jakarta ke setiap kota:")
+for city, distance in shortest_distances.items():
+    print(city, ":", distance)
+print("Shortest distances from Jakarta to other cities:")
+for city, distance in shortest_distances.items():
+    print(city, ":", distance)
+shortest_path, shortest_distance = petaIndonesia.tsp()
+print("Shortest TSP path:", shortest_path)
+print("Shortest TSP distance:", shortest_distance)
+
 
